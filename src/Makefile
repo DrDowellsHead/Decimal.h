@@ -1,5 +1,5 @@
 CC = gcc 
-CFLAGS = # -Wall -Werror -Wextra 
+CFLAGS = -Wall -Werror -Wextra 
 GCOV_FLAGS = --coverage 
 CHECK_FLAGS = -D_CRT_SECURE_NO_WARNINGS
 
@@ -18,7 +18,7 @@ endif
 
 
 # цель по умолчанию 
-all: clean s21_decimal.a test gcov_report
+all: clean s21_decimal.a test #gcov_report
 
 # создание библиотеки
 s21_decimal.a : $(OBJECT_FILES)
@@ -34,7 +34,7 @@ test: clean s21_decimal.a s21_test_run
 
 s21_test_run: $(SOURCE_TEST)
 #	$(CC) $(CFLAGS) $(CHECK_FLAGS) $(SOURCE_TEST) s21_string.a $(CHECK_LIBS) -o $@
-	$(CC) $(CFLAGS) $(SOURCE_TEST) s21_decimal.a -o $@
+	$(CC) $(CFLAGS) $(SOURCE_TEST) s21_decimal.a -lm -o $@
 
 clean:
 	rm -f *.o s21_decimal.a s21_test_run

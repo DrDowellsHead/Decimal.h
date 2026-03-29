@@ -22,12 +22,27 @@
 Если в числе типа decimal есть дробная часть, то её следует
 отбросить (например, 0.9 преобразуется 0).
 */
+
+
 // Из int
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int res = 0;
-
+  unsigned int srcD;
+  res = setScale(dst, 0);
+  if (src < 0) {
+    setSign(dst, 1);
+    srcD = (unsigned int)(-1 * (src + 1));
+    srcD++;
+  }
+  else {
+    setSign(dst, 0);
+    srcD = (unsigned int)src;
+  }
+  dst->bits[0] = srcD;
+  res = (res != 0) ? 1 : 0;
   return res;
 }
+/*
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   int res = 0;
@@ -46,3 +61,5 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
 
   return res;
 }
+
+*/
