@@ -1,15 +1,19 @@
 #include "s21_auxfunct.h"
 
-void getDecimalBit(s21_decimal numb, int bitNumber) {
+int getDecimalBit(s21_decimal numb, int bitNumber) {
+  int result;
   if (bitNumber >= 0 && bitNumber < 128) {
     int DecByt = bitNumber / 32, DecBit = bitNumber % 32;
     printf("Decimal byte %d bit #%d current byte  &  mask:\n", DecByt, DecBit);
     printIntBits(numb.bits[DecByt]);
     printIntBits(1 << DecBit);
-    printf("BIT [%d] = %d \n", bitNumber, (numb.bits[DecByt] & (1 << DecBit)) == (1 << DecBit));
+    result = ((numb.bits[DecByt] & (1 << DecBit)) == (1 << DecBit));
+    printf("BIT [%d] = %d \n", bitNumber, result);
   } else {
     printf("type Decimal haven't bit # %d [0 - 127]\n", bitNumber);
+    result = -1;
   }
+return result;
 }
 
 void printDecimalBits(s21_decimal numb) {

@@ -6,6 +6,6 @@
 void printCharBits(char num);
 void printIntBits(int num);
 void printDecimalBits(s21_decimal numb);
-void getDecimalBit (s21_decimal numb, int bitNumber);
+int getDecimalBit (s21_decimal numb, int bitNumber);
 
 #endif
