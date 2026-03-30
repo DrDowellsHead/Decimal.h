@@ -29,6 +29,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int res = 0;
   unsigned int srcD;
   res = setScale(dst, 0);
+  zeroDecMant(dst);
   if (src < 0) {
     setSign(dst, 1);
     srcD = (unsigned int)(-1 * (src + 1));
@@ -42,6 +43,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   res = (res != 0) ? 1 : 0;
   return res;
 }
+
 /*
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
@@ -49,12 +51,52 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
 
   return res;
 }
+*/
+
 // В int
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-  int res = 0;
-
+  int res = 0, scale;
+  unsigned int temp = 0;
+  scale = getScale(src);
+  for (;scale > 0;) {
+    src = mant_div10(src);
+    scale--;
+    setScale(&src, scale);
+  //  printDecimalBits(src);
+  }
+  //printDecimalBits(src);
+  if (src.bits[1] == 0 && src.bits[2] == 0) {
+    temp = (unsigned int)src.bits[0];
+    if (getSign(src)) {
+      //отрицательное
+      if (temp <= 2147483648) {
+        *dst = (-1) * (int)temp;
+      }
+      else {
+        res = 1;   
+        *dst = 0;
+      }
+    }
+    else {
+      // положительное
+      if (temp <= 2147483647) {
+        *dst = (int)temp;
+      }
+      else {
+        res = 1;   
+        *dst = 0;
+      }
+    }    
+  }
+  else {
+    res = 1;
+    *dst = 0;
+  }
+  //printIntBits(src.bits[0]);
   return res;
 }
+
+/*
 // В float
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   int res = 0;
