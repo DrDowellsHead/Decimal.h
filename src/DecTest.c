@@ -13,7 +13,7 @@ int main() {
   //float flnum = 79832191.12345679;
 
   //0x7FFFFFFF
-  int src = 2147483647, srcA = -99;//0x9F9F9F9F;
+  //int src = -2147483647, srcA = -99;//0x9F9F9F9F;
 
   //unsigned int srcu = src;
   //long long int srcll = src;
@@ -45,19 +45,39 @@ int main() {
   //printf("s21Numb.bits[0] %16u       16X   %x\n", s21Numb.bits[0], s21Numb.bits[0]);
 
 
-  src = 2147483649;
-  srcA = -99;
+  /* from int to dec & back 
+  s21Numb.bits[3] = 0xFFFFFFFF;
+  int src = 2147483649, srcA = -99;
   printf("trouble num unsign = %u  int = %d\n", src, src);
   printIntBits(src);
   s21_from_int_to_decimal(src, &s21Numb);
-  setScale(&s21Numb, 8);
+  //setScale(&s21Numb, 8);
   printDecimalBits(s21Numb);
   printf("convertation from dec to int = %d  (0 - ok / 1 - error)\n", s21_from_decimal_to_int(s21Numb, &srcA));
   printIntBits(srcA);
   //printIntBits(s21Numb.bits[0]);
+  */
 
+  /* FLOAAAAAAAAAAAAAAAAAAAAT */
+  
+  float x = 268435459;
 
+  unsigned int src = 0x9FFFFFFF;
+  int srcA = 0x9FFFFFFF;
+  printf("trouble num unsign = %u  int = %d\n", src, src);
+  printIntBits(src);
+  printf("A trouble num unsign = %u  int = %d\n", srcA, srcA);
+  printIntBits(srcA);
 
+  x = 123456789012345678901234567890123456789.123456789012345678901234567890;
+  printf("FLOAT MAX = %f\n", x);
+  printFloatBits(x);
+  
+  char buffFloat[100];
+  // Преобразование float в строку
+  // С контролем точности
+  sprintf(buffFloat, "%82.40f", x); // Результат: "3.14"
+  printf("Float string = [%s]\n", buffFloat);
 
   
 

@@ -28,8 +28,8 @@
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int res = 0;
   unsigned int srcD;
+  zeroDecNumb(dst);
   res = setScale(dst, 0);
-  zeroDecMant(dst);
   if (src < 0) {
     setSign(dst, 1);
     srcD = (unsigned int)(-1 * (src + 1));

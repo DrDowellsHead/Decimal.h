@@ -43,6 +43,14 @@ void zeroDecMant(s21_decimal * numb) {
   numb->bits[1] = 0;
   numb->bits[2] = 0;
 }
+
+void zeroDecNumb(s21_decimal * numb) {
+  numb->bits[0] = 0;
+  numb->bits[1] = 0;
+  numb->bits[2] = 0;
+  numb->bits[3] = 0;
+}
+
 int getSign(s21_decimal numb) {
   return getDecimalBit(numb, 127);
 }
@@ -53,7 +61,6 @@ int setSign(s21_decimal *numb, int sign) {
   // 1 = -
   return setDecimalBit(numb, 127, sign); 
 }
-
 
 int getScale(s21_decimal numb) {
   char * ptr8bit = (char *)&numb;
@@ -79,11 +86,10 @@ int setScale(s21_decimal *numb, int scale) {
   return res; 
 }
 
-
 int getDecimalBit(s21_decimal numb, int bitNumber) {
   int result;
   if (bitNumber >= 0 && bitNumber < 128) {
-    int DecByt = bitNumber / 32, DecBit = bitNumber % 32;
+    unsigned int DecByt = bitNumber / 32, DecBit = bitNumber % 32;
   //  printf("Decimal byte %d bit #%d current byte  &  mask:\n", DecByt, DecBit);
   //  printIntBits(numb.bits[DecByt]);
   //  printIntBits(1 << DecBit);

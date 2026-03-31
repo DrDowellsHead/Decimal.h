@@ -16,6 +16,7 @@ int setSign(s21_decimal *numb, int sign);
 int getScale(s21_decimal numb);
 int setScale(s21_decimal *numb, int scale);
 void zeroDecMant(s21_decimal * numb);
+void zeroDecNumb(s21_decimal * numb);
 s21_decimal mant_div10(s21_decimal numb);
 
 #endif
