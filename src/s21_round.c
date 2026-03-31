@@ -13,10 +13,11 @@ int s21_round(s21_decimal value, s21_decimal *result) {
 
     if (scale == 0) {
       *result = value;
-      exitcode = 0;
     } else {
       // Копируем мантиссу (bits[0-2] уже есть в value)
-      unsigned int mantissa[3] = {value.bits[0], value.bits[1], value.bits[2]};
+      unsigned int mantissa[3] = {(unsigned int)value.bits[0],
+                                  (unsigned int)value.bits[1],
+                                  (unsigned int)value.bits[2]};
 
       // Вычисляем делитель 10^scale
       unsigned int divisor = 1;
