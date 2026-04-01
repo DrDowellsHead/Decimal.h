@@ -69,18 +69,33 @@ int main() {
   printf("A trouble num unsign = %u  int = %d\n", srcA, srcA);
   printIntBits(srcA);
 
-  x = 123456789012345678901234567890123456789.123456789012345678901234567890;
+  x = 0.341e-28;//
+  //x = 1234567890123456789012345678901234567890.123456789012345678901234567890;
+  //x = 79228162514264337593543950335.0;
+  float x2 = 1e+29, x3 = 1e-28; //79228162514264337593543950336.0;
   printf("FLOAT MAX = %f\n", x);
   printFloatBits(x);
   
   char buffFloat[100];
   // Преобразование float в строку
   // С контролем точности
-  sprintf(buffFloat, "%82.40f", x); // Результат: "3.14"
-  printf("Float string = [%s]\n", buffFloat);
+  sprintf(buffFloat, "%-#.30f", x3); 
+  printf("Float string x3= [%s]\n", buffFloat);
+  sprintf(buffFloat, "%-#.30f", x); 
+  printf("Float string x = [%s]\n", buffFloat);
+  sprintf(buffFloat, "%-#.30f", x2); 
+  printf("Float string x2= [%s]\n", buffFloat);
 
-  
+  printf("\n - = [%c]  + = [%c]  . = [%c]\n", 45, 43, 46);
 
+  //printf("true ? %d\n", (x < 1e-28));
+  printf("true x < x2 & x > 1e-28 ? %d\n", (x2 > x) && (x > 1e-28));
+
+  float x5 = 1234567.8901;
+  sprintf(buffFloat, "%-f", x5); 
+  printf("Float %f string x = [%s]\n", x5, buffFloat);
+  printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
+  printf("Checkfloat = %d\n", checkPFloat(x5));
 
 
 
@@ -105,10 +120,10 @@ int main() {
 
   //printf("\nScale = %d\n", getScale(s21Numb));
 
+
+  /*
   int bitN = 131, bit, sign;
   while (bitN < 128) {
-    
-    
   //  printf("enter sign 0 = + or 1 = - : ");
     scanf("%d", &sign);
   //  printf(" | Get sign = %d Set sign result = %d \n", getSign(s21Numb), setSign( &s21Numb, sign));
@@ -121,6 +136,6 @@ int main() {
     printDecimalBits(s21Numb);
     printf("\nScale = %d\n", getScale(s21Numb));
   }
-
+*/
   return 0;
 }

@@ -2,6 +2,8 @@
 #define S21_AUXFUNC_H
 
 #include <math.h>
+#include <string.h>
+
 #include "s21_decimal.h"
 
 void printBits(const void *ptr, size_t size);
@@ -15,6 +17,7 @@ int getSign(s21_decimal numb);
 int setSign(s21_decimal *numb, int sign);
 int getScale(s21_decimal numb);
 int setScale(s21_decimal *numb, int scale);
+int checkPFloat(float xfloat);
 void zeroDecMant(s21_decimal * numb);
 void zeroDecNumb(s21_decimal * numb);
 s21_decimal mant_div10(s21_decimal numb);

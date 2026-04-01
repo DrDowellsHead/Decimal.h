@@ -1,23 +1,27 @@
 #include "s21_auxfunct.h"
 
 
+int checkPFloat(float xfloat) {
+  // если не удовлетворяет условиям преобразования возвращает 0 иначе кол-во разрядов перед '.'
+  int result = 0; 
+  char xchar[100] = {0};
+  if (xfloat > 1e-28 && xfloat < 1e+29) {
+    sprintf(xchar, "%-#.30f", xfloat);
+    int countInt = 0;
+    while (xchar[countInt] != '.') {
+      countInt++;
+    }
+    result = countInt; 
+  } 
+  else { 
+    result = 0;
+  }
+  return result;
+}
+
 // num[3] — 96-битное число (uint32_t), result[3] — частное
 s21_decimal mant_div10(s21_decimal numb) {
-/* num[3] — 96-битное число (uint32_t), result[3] — частное
-void bit_div10_96(const uint32_t num[3], uint32_t result[3]) {
-    uint64_t remainder = 0;
-    for (int i = 95; i >= 0; i--) {
-        remainder <<= 1;
-        int word = i / 32;
-        int bit = i % 32;
-        if (num[word] & (1UL << bit))
-            remainder |= 1;
-        if (remainder >= 10) {
-            remainder -= 10;
-            result[word] |= (1UL << bit);
-        }
-    }
-}*/
+
     s21_decimal res = numb;
     zeroDecMant(&res);
     int reminder = 0;
