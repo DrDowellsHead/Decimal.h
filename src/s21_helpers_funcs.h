@@ -9,5 +9,11 @@ int s21_get_sign(s21_decimal value); // Получение знака
 int s21_set_sign(s21_decimal *value, int sign); // Установка знака (0 - положительный, 1 - отрицательный)
 int s21_get_scale(s21_decimal value); // Получение коэффициента масштабирования
 int s21_set_scale(s21_decimal *value, int scale); // Установка коэффициента масштабирования (0-28)
+int s21_normalize_scales(s21_decimal *a, s21_decimal *b);
+int s21_multi_10_mantissa(s21_decimal *value);
+int s21_substraction_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
+int s21_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
+int s21_compare_mantissa(s21_decimal a, s21_decimal b);
+                            
 
 #endif
