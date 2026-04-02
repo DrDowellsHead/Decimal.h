@@ -61,21 +61,23 @@ int main() {
   /* FLOAAAAAAAAAAAAAAAAAAAAT */
   
   float x = 268435459;
-
+  /*
   unsigned int src = 0x9FFFFFFF;
   int srcA = 0x9FFFFFFF;
   printf("trouble num unsign = %u  int = %d\n", src, src);
   printIntBits(src);
   printf("A trouble num unsign = %u  int = %d\n", srcA, srcA);
   printIntBits(srcA);
+  */
 
   x = 0.341e-28;//
   //x = 1234567890123456789012345678901234567890.123456789012345678901234567890;
-  //x = 79228162514264337593543950335.0;
+  //
   float x2 = 1e+29, x3 = 1e-28; //79228162514264337593543950336.0;
   printf("FLOAT MAX = %f\n", x);
   printFloatBits(x);
   
+  /*
   char buffFloat[100];
   // Преобразование float в строку
   // С контролем точности
@@ -90,12 +92,20 @@ int main() {
 
   //printf("true ? %d\n", (x < 1e-28));
   printf("true x < x2 & x > 1e-28 ? %d\n", (x2 > x) && (x > 1e-28));
+  */
 
-  float x5 = 1234567.8901;
+
+  char buffFloat[100];
+  float x5 = -1234567.8901e+38;
   sprintf(buffFloat, "%-f", x5); 
   printf("Float %f string x = [%s]\n", x5, buffFloat);
   printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
-  printf("Checkfloat = %d\n", checkPFloat(x5));
+  //printf("Checkfloat = %d\n", checkPFloat(x5));
+  x = 7.9228162514264337593543950336e+28; // max numb
+  x = -0.0000012481846;
+  sprintf(buffFloat, "%-f", x); 
+  printf("Float   x = %f \nstring x = [%s]\n", x, buffFloat);
+  printf("result of float to dec = %d", s21_from_float_to_decimal(x, &s21Numb));
 
 
 

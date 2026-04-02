@@ -44,14 +44,53 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   return res;
 }
 
-/*
+
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  int res = 0;
+  int res = 0, countInt = 0, sign = 0, scale = 0;
+  sign = (src < 0) ? 1 : 0;
+  src = (sign) ? src * ( -1 ) : src;
+  countInt = checkPFloat(src);
+              printf("sign = %d, float = %f, countInt = %d\n", sign, src, countInt);
+  if (countInt != 0) {
+    char stringFloat[100];
+    int frontCount = 0, backCount = 0;
+    zeroDecNumb(dst); 
+    setSign(dst, sign);  
+    sprintf(stringFloat, "%-.36f", src); 
+              printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
+    if (1) {  // целая часть больше 0
+      for (int i = 0, flagDot = 0, flagDigit = 0, digitFound = 0, flag = 1; flag && i < 80;) {
+        if (stringFloat[i] == 46) {
+          flagDot = 1;
+          printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot);
+          i++;
+        }
+        else {
+          flagDigit = ( stringFloat[i] != 48 ) ? 1 : flagDigit;
+          scale = ( flagDot ) ? scale + 1 : scale;
+          digitFound = ( flagDigit ) ? digitFound + 1 : digitFound;
+          printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot);
+          i++;
+        }
+        flag = (digitFound < 9) ? flag : 0;        
+      }
 
+    }
+    else { // целая часть меньше 0
+
+    }
+    setScale(dst, scale); 
+
+  }
+  else {
+    res = 1;
+    zeroDecNumb(dst);  
+  }
+  printDecimalBits(*dst);
   return res;
 }
-*/
+
 
 // В int
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
