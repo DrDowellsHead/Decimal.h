@@ -19,6 +19,26 @@ int checkPFloat(float xfloat) {
   return result;
 }
 
+int bankRoundSeven(int src) {
+  // округляет 8 значное целое до 7ми значащих цифр банковским округлением
+  int res = 0, ostatok;
+  ostatok = src%10;
+  printf("ostatok = %d\n", ostatok);
+  if (ostatok == 5) {
+    res = src / 10;
+    if (res % 2 == 0) {
+      res = res * 10;
+    }
+    else {
+      res = (res + 1) * 10;
+    }
+  }
+  else {
+    res = (ostatok < 5) ? src - ostatok : src + (10 - ostatok);
+  }
+return res;
+}
+
 // num[3] — 96-битное число (uint32_t), result[3] — частное
 s21_decimal mant_div10(s21_decimal numb) {
 

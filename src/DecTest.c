@@ -101,11 +101,14 @@ int main() {
   printf("Float %f string x = [%s]\n", x5, buffFloat);
   printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
   //printf("Checkfloat = %d\n", checkPFloat(x5));
-  x = 7.9228162514264337593543950336e+28; // max numb
-  x = -0.0000012481846;
+  x = 7.92281762514264337593543950336e+28; // max numb
+  //x = 12.3200000000012345678;
   sprintf(buffFloat, "%-f", x); 
   printf("Float   x = %f \nstring x = [%s]\n", x, buffFloat);
-  printf("result of float to dec = %d", s21_from_float_to_decimal(x, &s21Numb));
+  printf("result of float to dec = %d\n", s21_from_float_to_decimal(x, &s21Numb));
+
+  //int int8 = 123456775;
+  //printf("SRC = %d\nRES = %d\n", int8, bankRoundSeven(int8));
 
 
 

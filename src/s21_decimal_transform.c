@@ -47,7 +47,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  int res = 0, countInt = 0, sign = 0, scale = 0;
+  int res = 0, countInt = 0, sign = 0, scale = 0, mantissa, delitel = 0;
   sign = (src < 0) ? 1 : 0;
   src = (sign) ? src * ( -1 ) : src;
   countInt = checkPFloat(src);
@@ -59,28 +59,35 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     setSign(dst, sign);  
     sprintf(stringFloat, "%-.36f", src); 
               printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
-    if (1) {  // целая часть больше 0
-      for (int i = 0, flagDot = 0, flagDigit = 0, digitFound = 0, flag = 1; flag && i < 80;) {
+      for (int i = 0, flagDot = 0, flagDigit = 0, digitFound = 0, intdigitfound = 0, flag = 1; flag && i < 80;) {
         if (stringFloat[i] == 46) {
           flagDot = 1;
-          printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot);
+                        printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d, intdigitfound = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot, intdigitfound);
           i++;
         }
         else {
           flagDigit = ( stringFloat[i] != 48 ) ? 1 : flagDigit;
           scale = ( flagDot ) ? scale + 1 : scale;
+          intdigitfound = ( flagDot ) ? intdigitfound : intdigitfound + 1;
           digitFound = ( flagDigit ) ? digitFound + 1 : digitFound;
-          printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot);
+                        printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d, intdigitfound = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot, intdigitfound);
           i++;
         }
-        flag = (digitFound < 9) ? flag : 0;        
+        flag = (digitFound < 8 || flagDot == 0) ? flag : 0; 
+        delitel = (intdigitfound > 8) ? intdigitfound - 8 : 0; //printf("digitFound < 9 && !flagDot = %d\n", digitFound < 9 && !flagDot);       
       }
-
-    }
-    else { // целая часть меньше 0
-
-    }
-    setScale(dst, scale); 
+      scale = scale - delitel;
+      mantissa = bankRoundSeven((int)((double)src*pow(10, scale)));
+      printf ("%d in %d scale src float = %d\n", mantissa, scale, (int)((double)src*pow(10, scale)) );
+      if (scale < -20 && mantissa > 79228160) {
+        printf("numb is bigger then max decimal\n");
+        res = 1;
+        zeroDecNumb(dst);  
+      }
+      else {
+        //здесь нужно довести число до нормального вида уже в дециамaл формате умножая на 10 до положительной шкалы 
+      }
+    //setScale(dst, scale); 
 
   }
   else {
