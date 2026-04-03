@@ -80,7 +80,7 @@ int s21_compare_mantissa(s21_decimal a, s21_decimal b) {
     return 0;
 }
 
-int s21_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result) {
+int s21_add_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result) {
     // Функция для сложения мантиссы в 96 битов (3 элемента массива bits), двух
     // чисел s21_decimal. Возвращает 1, если результат сложения превышает 96
     // битов, и 0 в противном случае.
@@ -106,7 +106,7 @@ int s21_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result) {
     return (int)over;
 }
 
-int s21_substraction_mantissa(s21_decimal a, s21_decimal b,
+int s21_sub_over_big_mantissa(s21_decimal a, s21_decimal b,
                               s21_decimal *result) {
     // Реализует вычитание из 96 битного слова. Для реализации вычитания чисел с
     // разным знаком. Используется алгоритм, аналогичный алгоритму сложения, но

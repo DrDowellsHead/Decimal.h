@@ -11,8 +11,8 @@ int s21_get_scale(s21_decimal value); // Получение коэффициен
 int s21_set_scale(s21_decimal *value, int scale); // Установка коэффициента масштабирования (0-28)
 int s21_normalize_scales(s21_decimal *a, s21_decimal *b);
 int s21_multi_10_mantissa(s21_decimal *value);
-int s21_substraction_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
-int s21_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
+int s21_sub_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
+int s21_add_over_big_mantissa(s21_decimal a, s21_decimal b, s21_decimal *result);
 int s21_compare_mantissa(s21_decimal a, s21_decimal b);
                             
 
