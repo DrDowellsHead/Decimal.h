@@ -41,7 +41,6 @@ return res;
 
 // num[3] — 96-битное число (uint32_t), result[3] — частное
 s21_decimal mant_div10(s21_decimal numb) {
-
     s21_decimal res = numb;
     zeroDecMant(&res);
     int reminder = 0;
@@ -59,6 +58,24 @@ s21_decimal mant_div10(s21_decimal numb) {
         }
     }
     //setScale(&res, (getScale(numb) - 1)); 
+    return res;
+}
+
+// num[3] — 96-битное число (uint32_t), result[3] — частное
+s21_decimal mant_mult10(s21_decimal numb) {
+    s21_decimal res = numb, m8 = {0}, m2 = {0};
+    zeroDecMant(&res);
+    for (int i = 95; i >= 0; i--) {
+      setDecimalBit( &m8, i, ((i >= 3) ? getDecimalBit( numb, i-3) : 0 ));
+      setDecimalBit( &m2, i, ((i >= 1) ? getDecimalBit( numb, i-1) : 0 ));
+    }
+    for (int i = 0, ps = 0, bit2, bit8, psnew; i <96; i++) {
+      bit2 = getDecimalBit( m2, i);
+      bit8 = getDecimalBit( m8, i);
+      setDecimalBit( &res, i, bit2 ^ bit8 ^ ps); 
+      psnew = (bit2 & bit8) | (bit2 & ps) | (bit8 & ps);
+      ps = psnew;
+    }
     return res;
 }
 

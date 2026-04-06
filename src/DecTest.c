@@ -5,6 +5,7 @@
 union DateDecLL {
    s21_decimal decNumb;
    long long int llNumb[2]; 
+   int intNumb[4];
  };
 
 
@@ -101,16 +102,28 @@ int main() {
   printf("Float %f string x = [%s]\n", x5, buffFloat);
   printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
   //printf("Checkfloat = %d\n", checkPFloat(x5));
-  x = 7.92281762514264337593543950336e+28; // max numb
+  x = -7.92281662514264337593543950336e-27; // max numb
   //x = 12.3200000000012345678;
+  //x = -2147483648;
   sprintf(buffFloat, "%-f", x); 
   printf("Float   x = %f \nstring x = [%s]\n", x, buffFloat);
   printf("result of float to dec = %d\n", s21_from_float_to_decimal(x, &s21Numb));
+  
+  union DateDecLL datai;
+  datai.decNumb = s21Numb;
 
+ printf("x64 [0] = %lld \n",  datai.llNumb[0]);
   //int int8 = 123456775;
   //printf("SRC = %d\nRES = %d\n", int8, bankRoundSeven(int8));
+ printf("int union first = %d\n", datai.intNumb[0]);
+ //datai.decNumb = mant_mult10(datai.decNumb);
+ printf("mult int union first = %d\n", datai.intNumb[0]);
+ printf("mult x64 [0] = %lld \n",  datai.llNumb[0]);
 
 
+ printf("res of s21 to float = %d\n", s21_from_decimal_to_float(datai.decNumb, &x5));
+ sprintf(buffFloat, "%-f", x5); 
+ printf("Float   x = %e \nstring x = [%s]\n", x5, buffFloat);
 
 
 /* проверка деления 

@@ -51,14 +51,14 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   sign = (src < 0) ? 1 : 0;
   src = (sign) ? src * ( -1 ) : src;
   countInt = checkPFloat(src);
-              printf("sign = %d, float = %f, countInt = %d\n", sign, src, countInt);
+                         printf("sign = %d, float = %f, countInt = %d\n", sign, src, countInt);
   if (countInt != 0) {
     char stringFloat[100];
     int frontCount = 0, backCount = 0;
     zeroDecNumb(dst); 
     setSign(dst, sign);  
     sprintf(stringFloat, "%-.36f", src); 
-              printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
+                        printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
       for (int i = 0, flagDot = 0, flagDigit = 0, digitFound = 0, intdigitfound = 0, flag = 1; flag && i < 80;) {
         if (stringFloat[i] == 46) {
           flagDot = 1;
@@ -85,10 +85,14 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
         zeroDecNumb(dst);  
       }
       else {
-        //здесь нужно довести число до нормального вида уже в дециамaл формате умножая на 10 до положительной шкалы 
+        dst->bits[0] = mantissa / 10;
+        scale--;
+        while ( scale < 0) {
+          *dst = mant_mult10(*dst);
+          scale++;
+        } 
       }
-    //setScale(dst, scale); 
-
+    setScale(dst, scale); 
   }
   else {
     res = 1;
@@ -142,12 +146,23 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   return res;
 }
 
-/*
+
 // В float
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  int res = 0;
-
+  int res = 0, scale_mantissa = 0, sign, scale;
+  printDecimalBits(src);
+  while ( src.bits[2] != 0 || src.bits[1] != 0) {
+    
+    src = mant_div10(src);
+    printf("%d mantisa\n",src.bits[0]);
+    printDecimalBits(src);
+    scale_mantissa++;
+  }
+  //printDecimalBits(src);
+  sign = (getSign(src)) ? - 1 : 1;
+  scale = getScale(src);
+  printf("%d scale mantisa, %d scale, mantisa = %u\n",scale_mantissa, scale, src.bits[0]);
+  *dst = sign * (float)(unsigned int)src.bits[0] * pow(10, scale_mantissa - scale);
   return res;
 }
 
-*/

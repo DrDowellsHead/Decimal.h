@@ -22,5 +22,6 @@ int bankRoundSeven(int src);
 void zeroDecMant(s21_decimal * numb);
 void zeroDecNumb(s21_decimal * numb);
 s21_decimal mant_div10(s21_decimal numb);
+s21_decimal mant_mult10(s21_decimal numb);
 
 #endif
