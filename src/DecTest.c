@@ -1,13 +1,13 @@
 #include "s21_decimal.h"
 #include "s21_auxfunct.h"
 
-
+/*
 union DateDecLL {
    s21_decimal decNumb;
    long long int llNumb[2]; 
    int intNumb[4];
  };
-
+*/
 
 int main() {
   s21_decimal s21Numb = {{0xFFFFFFFF, 0x000000FF, 0, 0}};
@@ -104,9 +104,11 @@ int main() {
   //printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
   //printf("Checkfloat = %d\n", checkPFloat(x5));
   
+  
   //tests for float to dec
   //x = -7.92281622514264337593543950335e+28; // max numb border
   //(|x| > 79,228,162,514,264,337,593,543,950,335)
+  //x = -7.922816e+28;
   //x = -7.92282622514264337593543950335e+28; //biger
   //x = 7.92282622514264337593543950335e+28;  // biger
   //x = 7.92282622514264337593543950335e+35; // much bigger
@@ -115,27 +117,83 @@ int main() {
   //x = 1e-28; // min border
   //x = 1.0092282622514264337593543950335e-15;
   //x = 2.0092282622514264337593543950335e+19;
-  //x = 8;
+  //x = -8;
   //x = 100000;
   //x = 0;
-  x = -1;
-  printf("\n\nMAIN Result of float to dec = %d\n", s21_from_float_to_decimal(x, &s21Numb));
+  //x = -1;
+  //x = -18446744073709551616.0;
+
+
+    //tests for int 
+  //x = -2147483648;
+  //x = 2147483647;
+  //(|x| > 79,228,162,514,264,337,593,543,950,335)
+  //x = -7.922816e+28;
+  //x = -7.92282622514264337593543950335e+28; //biger
+  //x = 7.92282622514264337593543950335e+28;  // biger
+  //x = 7.92282622514264337593543950335e+35; // much bigger
+  //x = 0.9e-28;  //smaller
+  //x = 0.5e-35;  //much smaller
+  //x = 1e-28; // min border
+  //x = 1.0092282622514264337593543950335e-15;
+  //x = 2.0092282622514264337593543950335e+19;
+  x = -8;
+  //x = 100000;
+  //x = 0;
+  //x = -1;
+  //x = -18446744073709551616.0;
+
+  printFloatBits(x);
+  printf("X = %f", x);
+  printf("\n\nMAIN Result of float to dec = %d ( 0 - ok )\n", s21_from_float_to_decimal(x, &s21Numb));
   
+
+ s21Numb.bits[0] = 0x7FFFFFFF;
+ s21Numb.bits[0] = 0x80000000;
+ s21Numb.bits[1] = 0xFFFFFFFF;
+ s21Numb.bits[2] = 0xFFFFFFFF;
+
+
   union DateDecLL datai;
   datai.decNumb = s21Numb;
+  //datai.llNumb[0] = (unsigned long long int) 17446754073709551616.0;
+  //printf("\n\nMAIN continue \nx64 [0] = %llu \n",  datai.llNumb[0]);
+  //printBits(&datai.llNumb[0], 8);
+  //printBits(&datai.decNumb, 16);
+  
+ //setDecimalBit(&datai.decNumb, 114, 1);
+ setScale(&datai.decNumb, 20);
+ //setSign(&datai.decNumb, 1);
+ printDecimalBits(datai.decNumb);
+ int xifdec = 0;
+ printf("\nRES from dec  to  int = %d ( 0 - ok )\n", s21_from_decimal_to_int(datai.decNumb, &xifdec));
+ printf("INT   = %d \n", xifdec);
+ //printIntBits(xifdec);
+ printf("\nRES from dec to float = %d ( 0 - ok )\n", s21_from_decimal_to_float(datai.decNumb, &x5));
+ sprintf(buffFloat, "%-.28f", x5); 
+ printf("Float = %f e \nstring [%s]\n", x5, buffFloat);
 
- printf("\n\nMAIN continue \nx64 [0] = %lld \n",  datai.llNumb[0]);
-  //int int8 = 123456775;
-  //printf("SRC = %d\nRES = %d\n", int8, bankRoundSeven(int8));
- printf("int union first = %d\n", datai.intNumb[0]);
- //datai.decNumb = mant_mult10(datai.decNumb);
- printf("mult int union first = %d\n", datai.intNumb[0]);
- printf("mult x64 [0] = %lld \n",  datai.llNumb[0]);
-
-
- printf("res of s21 to float = %d\n", s21_from_decimal_to_float(datai.decNumb, &x5));
+ 
+ //printf("    res mDecimal = %20.4lf\n", mDecimal(datai.decNumb));
+ //printf("LLI res mDecimal = %20lld\n", (long long int)mDecimal(datai.decNumb));
+ /*
+ printf("res of s21 to float = %d ( 0 - ok )\n", s21_from_decimal_to_float(datai.decNumb, &x5));
  sprintf(buffFloat, "%-.28f", x5); 
  printf("Float   x = %e \nstring x = [%s]\n", x5, buffFloat);
+ printf("\nU int from float = %14u int from bit0 = %14u\n", (int)x5, datai.intNumb[0]);
+ printf("\nD int from float = %14d int from bit0 = %14d\n", (int)x5, datai.intNumb[0]);
+ printf("\nint from DECIM u = %14u int from DECd = %14d\n", xifdec, xifdec);
+ printIntBits((int)x5);
+ printIntBits(datai.intNumb[0]);
+ */
+ 
+ 
+
+
+ //CHECKDECIMAL?
+ //setDecimalBit(&s21Numb, 126, 1);
+ //printDecimalBits(s21Numb);
+ //printf("\n\n ChekDec = %d (o - ok, 1 - error)\n", checkDecimal(s21Numb));
 
 
 /* проверка деления 

@@ -23,7 +23,6 @@
 отбросить (например, 0.9 преобразуется 0).
 */
 
-
 // Из int
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int res = 0;
@@ -59,7 +58,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     char stringFloat[100];
     zeroDecNumb(dst); 
     setSign(dst, sign);  
-    sprintf(stringFloat, "%-.36f", src);                                                                           printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
+    sprintf(stringFloat, "%-.36f", src);        //printf("Float   x = %f \nstring x = [%s]\n", src, stringFloat);
       for (int i = 0, flagDot = 0, flagDigit = 0, intdigitfound = 0, flag = 1; flag && scale < 28;) {
         if (stringFloat[i] == 46) {
           flagDot = 1;                          // printf ("[%c] i = %d, scale = %d, digitFound = %d, flagdig = %d, flagdot = %d, intdigitfound = %d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot, intdigitfound);
@@ -69,7 +68,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
           flagDigit = ( stringFloat[i] != 48 ) ? 1 : flagDigit;
           scale = ( flagDot ) ? scale + 1 : scale;
           intdigitfound = ( flagDot ) ? intdigitfound : intdigitfound + 1;
-          digitFound = ( flagDigit ) ? digitFound + 1 : digitFound;                                                   printf ("[%c] i= %2d, scale= %2d, digitFound= %2d, flagdig= %2d, flagdot= %2d, intdigitfound= %2d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot, intdigitfound);
+          digitFound = ( flagDigit ) ? digitFound + 1 : digitFound;  // printf ("[%c] i= %2d, scale= %2d, digitFound= %2d, flagdig= %2d, flagdot= %2d, intdigitfound= %2d\n", stringFloat[i], i, scale, digitFound, flagDigit, flagDot, intdigitfound);
           i++;
         }
         flag = (digitFound < 8 || flagDot == 0) ? flag : 0; 
@@ -112,64 +111,41 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
 
 // В int
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-  int res = 0, scale;
-  unsigned int temp = 0;
-  scale = getScale(src);
-  for (;scale > 0;) {
+  // max int 2147483647 && min int -2147483648
+  int res = 0, sign, scale;
+  double norm_mant;
+  sign = (getSign(src)) ? - 1 : 1;
+  scale = getScale(src);                                     //printf("%30lf\n", mDecimal(src));
+  while (scale > 0) {
     src = mant_div10(src);
     scale--;
-    setScale(&src, scale);
-  //  printDecimalBits(src);
-  }
-  //printDecimalBits(src);
-  if (src.bits[1] == 0 && src.bits[2] == 0) {
-    temp = (unsigned int)src.bits[0];
-    if (getSign(src)) {
-      //отрицательное
-      if (temp <= 2147483648) {
-        *dst = (-1) * (int)temp;
-      }
-      else {
-        res = 1;   
-        *dst = 0;
-      }
+  }                                                          //  printDecimalBits(src);
+  norm_mant = mDecimal(src);                                 //printf("%30lf\n", mDecimal(src)); //printf("%-20lf\n%-20lu\n", norm_mant, 2147483648);
+  if (sign > 0 && norm_mant < (double)2147483648) {
+      *dst = (int)norm_mant;
     }
-    else {
-      // положительное
-      if (temp <= 2147483647) {
-        *dst = (int)temp;
-      }
-      else {
-        res = 1;   
-        *dst = 0;
-      }
-    }    
-  }
+  else if (sign < 0 && norm_mant < (double)2147483649) {
+      *dst = (int)(sign * norm_mant);
+    }
   else {
-    res = 1;
-    *dst = 0;
-  }
-  //printIntBits(src.bits[0]);
+      *dst = 0;
+      res = 1;
+  }     
   return res;
 }
 
 
 // В float
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  int res = 0, scale_mantissa = 0, sign, scale;
-  printDecimalBits(src);
-  while ( src.bits[2] != 0 || src.bits[1] != 0) {
-    
-    src = mant_div10(src);
-   // printf("%d mantisa\n",src.bits[0]);
-   // printDecimalBits(src);
-    scale_mantissa++;
+  int res = 0, sign;
+  if (checkDecimal(src)) {
+    *dst = 0;
+    res = 1;
   }
-  //printDecimalBits(src);
-  sign = (getSign(src)) ? - 1 : 1;
-  scale = getScale(src);
-  printf("%d scale mantisa, %d scale, mantisa = %u\n",scale_mantissa, scale, src.bits[0]);
-  *dst = sign * (float)(unsigned int)src.bits[0] * pow(10, scale_mantissa - scale);
+  else {
+    sign = (getSign(src)) ? - 1 : 1;
+    *dst = (float)(sign * ((mDecimal(src)) * pow(10.0, - getScale(src))));
+  } 
   return res;
 }
 

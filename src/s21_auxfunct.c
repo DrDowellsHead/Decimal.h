@@ -1,22 +1,11 @@
 #include "s21_auxfunct.h"
 
-
-int checkPFloat(float xfloat) {
-  // если не удовлетворяет условиям преобразования возвращает 0 иначе кол-во разрядов перед '.'
-  int result = 0; 
-  char xchar[100] = {0};
-  if (xfloat > 1e-28 && xfloat < 1e+29) {
-    sprintf(xchar, "%-#.30f", xfloat);
-    int countInt = 0;
-    while (xchar[countInt] != '.') {
-      countInt++;
-    }
-    result = countInt; 
-  } 
-  else { 
-    result = 0;
+double mDecimal(s21_decimal numb) {
+  double res = 0;
+  for (int i = 0; i < 96; i++) {
+    res += getDecimalBit( numb, i) * pow(2.0, i);  //printf("i=%d, NUMB = %lf\n", i, modul_numb);
   }
-  return result;
+  return res;
 }
 
 int bankRoundSeven(int src) {
@@ -37,6 +26,23 @@ int bankRoundSeven(int src) {
     res = (ostatok < 5) ? src - ostatok : src + (10 - ostatok);
   }
 return res;
+}
+
+int checkDecimal(s21_decimal numb){
+  //Decimal проверка числа на scale < 28 && запрещенные биты = 0
+  // 0 - ok    1 - error
+  int res = 0, scale;
+  for (int i = 96; i < 112; i++) {
+      res = getDecimalBit(numb, i) ? 1 : res;
+  }
+  for (int i = 120; i < 127; i++) {
+      res = getDecimalBit(numb, i) ? 1 : res;
+  }
+  scale = getScale(numb);
+  if (scale > 28 || scale < 0) {
+    res = 1;
+  }
+  return res;
 }
 
 // num[3] — 96-битное число (uint32_t), result[3] — частное
@@ -162,7 +168,7 @@ int setDecimalBit(s21_decimal *numb, int bitNumber, int bitDest) {
 }
 
 void printDecimalBits(s21_decimal numb) {
-  for (int j = 0; j < 4; j++) {
+  for (int j = 3; j >= 0; j--) {
     int temp = numb.bits[j];
     printf("bits [%d] % 4d - % 4d: ", j, (32 * (j + 1)) - 1, 32 * j);
     for (int i = 31, count = 1; i >= 0; i--, count++) {
@@ -236,12 +242,13 @@ void printFloatBits(float numb) {
 
 void printBits(const void *ptr, size_t size) {
     const unsigned char *bytes = (const unsigned char*)ptr;
-    printf("Void type Bits : ");
+    printf("Void type Bits : \n");
     for (int i = size - 1; i >= 0; i--) {
         for (int j = 7; j >= 0; j--) {
             printf("%d", (bytes[i] >> j) & 1);
         }
         if (i > 0) printf(" ");
+        if (i % 4 == 0) printf ("\n");
     }
     printf("\n");
 }

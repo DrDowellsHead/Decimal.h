@@ -6,6 +6,14 @@
 
 #include "s21_decimal.h"
 
+union DateDecLL {
+   s21_decimal decNumb;
+   unsigned long long int llNumb[2]; 
+   int intNumb[4];
+ };
+
+int checkDecimal(s21_decimal numb);
+double mDecimal(s21_decimal numb); 
 void printBits(const void *ptr, size_t size);
 void printCharBits(char num);
 void printFloatBits(float num);
@@ -17,7 +25,6 @@ int getSign(s21_decimal numb);
 int setSign(s21_decimal *numb, int sign);
 int getScale(s21_decimal numb);
 int setScale(s21_decimal *numb, int scale);
-int checkPFloat(float xfloat);
 int bankRoundSeven(int src);
 void zeroDecMant(s21_decimal * numb);
 void zeroDecNumb(s21_decimal * numb);
