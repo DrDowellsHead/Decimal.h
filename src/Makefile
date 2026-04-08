@@ -1,5 +1,5 @@
 CC = gcc 
-CFLAGS = -Wall # -Werror  -Wextra 
+CFLAGS = -Wall -Werror  -Wextra 
 GCOV_FLAGS = --coverage 
 CHECK_FLAGS = -D_CRT_SECURE_NO_WARNINGS
 

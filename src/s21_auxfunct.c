@@ -11,8 +11,7 @@ double mDecimal(s21_decimal numb) {
 int bankRoundSeven(int src) {
   // округляет 8 значное целое до 7ми значащих цифр банковским округлением
   int res = 0, ostatok;
-  ostatok = src%10;
-  printf("ostatok = %d\n", ostatok);
+  ostatok = src % 10; //printf("ostatok = %d\n", ostatok);
   if (ostatok == 5) {
     res = src / 10;
     if (res % 2 == 0) {
@@ -28,8 +27,40 @@ int bankRoundSeven(int src) {
 return res;
 }
 
+void CheckFloat8(float src, int * mantissa_seven, int * scale_seven) {
+  //находим 7 значащих цифр и порядок этого числа
+    char string_float[100] = {0};  
+    int digit_found = 0, delitel = 0; 
+    *scale_seven = 0;                        //printf("\n\nS21 F to Dec \nsorce sign = %d, float(.28) = %-.28f\n", sign, src);
+    sprintf(string_float, "%-.36f", src);                   //printf("Float   x = %f \nstring x = [%s]\n", src, string_float);
+    for (int i = 0, flag_dot = 0, flag_digit = 0, int_digit_found = 0, flag = 1; flag; i++) { // && scale < 28; i++) {  
+      if (string_float[i] == 46) {
+        flag_dot = 1;
+      }
+      else {
+        flag_digit = (string_float[i] != 48) ? 1 : flag_digit;
+        *scale_seven = (flag_dot) ? *scale_seven + 1 : *scale_seven;
+        int_digit_found = (flag_dot) ? int_digit_found : int_digit_found + 1;
+        digit_found = (flag_digit) ? digit_found + 1 : digit_found;  
+      }
+      delitel = (int_digit_found > 8) ? int_digit_found - 8 : 0;                    // чтобы получить 8ми значное число, нужно src / (10 ^ delitel)
+      flag = ((digit_found < 8 || flag_dot == 0) && *scale_seven < 28) ? flag : 0;  // выход из цикла: (поиск до 28 порядка) или (8 значащих цифр и найденная целая часть числа)  
+      //printf("%2d[%c] dot= %d dig= %d scale= %2d, digitF= %2d, intdigitF= %2d  delitel = %d  flag = %d\n", i, string_float[i] ,flag_dot , flag_digit, *scale_seven, digit_found, int_digit_found, delitel, flag);
+    }
+    *scale_seven = *scale_seven - delitel ;  //printf("NEW scale (-delitel) = %d, (int)src*10^(%d) = %d \n", *scale_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven)));
+      if (digit_found >= 8) { 
+        //если цифр больше 8 округляем до 7ми
+        *mantissa_seven = (bankRoundSeven((int)((double)src*pow(10, *scale_seven)))) / 10;
+        (*scale_seven) = (*scale_seven) - 1; //printf("DigitFound = %d, mantissa BANKround = %d, mantissa before round = %d\n", digit_found, *mantissa_seven, (int)((double)src*pow(10, (*scale_seven) + 1)));
+      }
+      else {
+        *mantissa_seven = ((int)((double)src*pow(10, *scale_seven)));
+      }                                        
+      printf ("AFTER ROUND mantissa = %d in %d scale src float = %d\n", *mantissa_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven + 1)) );
+}
+
 int checkDecimal(s21_decimal numb){
-  //Decimal проверка числа на scale < 28 && запрещенные биты = 0
+  //Decimal проверка числа на scale <= 28 && запрещенные биты = 0
   // 0 - ok    1 - error
   int res = 0, scale;
   for (int i = 96; i < 112; i++) {
@@ -127,8 +158,8 @@ int setScale(s21_decimal *numb, int scale) {
     *(ptr8bit+14) = scale;
   }
   else {
-    printf("ERROR: scale can be from 0 to 28, not %d\n", scale);
-    res = -1;
+    //printf("ERROR: scale can be from 0 to 28, not %d\n", scale);
+    res = 1;
   }
   return res; 
 }
@@ -162,7 +193,7 @@ int setDecimalBit(s21_decimal *numb, int bitNumber, int bitDest) {
   } 
   else {
     printf("ERROR type Decimal haven't bit # %d [0 - 127], and can set only 0 or 1, not %d\n", bitNumber, bitDest);
-    result = -1;
+    result = 1; //-1;
   }
   return result;
 }
