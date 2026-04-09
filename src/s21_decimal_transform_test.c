@@ -124,20 +124,20 @@ Suite *s21_decimal_suite() {
   tcase_add_test(tc, test_memchr_null);
   suite_add_tcase(s, tc);
 
-  tc = tcase_create("memcmp");
+  tc = tcase_create("s21_from_float_to_decimal");
   tcase_add_test(tc, test_memcmp_equal);
   tcase_add_test(tc, test_memcmp_less);
   tcase_add_test(tc, test_memcmp_greater);
   tcase_add_test(tc, test_memcmp_n_zero);
   suite_add_tcase(s, tc);
 
-  tc = tcase_create("memcpy");
+  tc = tcase_create("s21_from_decimal_to_int");
   tcase_add_test(tc, test_memcpy_basic);
   tcase_add_test(tc, test_memcpy_n_zero);
   tcase_add_test(tc, test_memcpy_null);
   suite_add_tcase(s, tc);
 
-  tc = tcase_create("memset");
+  tc = tcase_create("s21_from_decimal_to_float");
   tcase_add_test(tc, test_memset_basic);
   tcase_add_test(tc, test_memset_zero);
   suite_add_tcase(s, tc);

@@ -24,7 +24,7 @@ int bankRoundSeven(int src) {
   else {
     res = (ostatok < 5) ? src - ostatok : src + (10 - ostatok);
   }
-return res;
+  return res;
 }
 
 void CheckFloat8(float src, int * mantissa_seven, int * scale_seven) {
@@ -49,14 +49,14 @@ void CheckFloat8(float src, int * mantissa_seven, int * scale_seven) {
     }
     *scale_seven = *scale_seven - delitel ;  //printf("NEW scale (-delitel) = %d, (int)src*10^(%d) = %d \n", *scale_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven)));
       if (digit_found >= 8) { 
-        //если цифр больше 8 округляем до 7ми
+        //если цифр больше 8 округляем до 7ми банк округлением
         *mantissa_seven = (bankRoundSeven((int)((double)src*pow(10, *scale_seven)))) / 10;
-        (*scale_seven) = (*scale_seven) - 1; //printf("DigitFound = %d, mantissa BANKround = %d, mantissa before round = %d\n", digit_found, *mantissa_seven, (int)((double)src*pow(10, (*scale_seven) + 1)));
+        (*scale_seven) = (*scale_seven) - 1; //        printf("BANKROUND DigitFound = %d, mantissa BANKround = %d, mantissa before round = %d\n", digit_found, *mantissa_seven, (int)((double)src*pow(10, (*scale_seven) + 1)));
       }
       else {
         *mantissa_seven = ((int)((double)src*pow(10, *scale_seven)));
       }                                        
-      printf ("AFTER ROUND mantissa = %d in %d scale src float = %d\n", *mantissa_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven + 1)) );
+      //printf ("FINAL CHEKFLOAT mantissa = %d in %d scale src float = %d\n", *mantissa_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven + 1)) );
 }
 
 int checkDecimal(s21_decimal numb){
