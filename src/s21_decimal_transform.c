@@ -1,6 +1,5 @@
-#include "s21_decimal.h"
-
 #include "s21_auxfunct.h"
+#include "s21_decimal.h"
 /*
 Преобразователи
 Возвращаемое значение — код ошибки:

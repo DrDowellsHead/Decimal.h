@@ -1,43 +1,51 @@
-CC = gcc 
-CFLAGS = # -Wall -Werror -Wextra 
-GCOV_FLAGS = --coverage 
-CHECK_FLAGS = -D_CRT_SECURE_NO_WARNINGS
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -std=c11 -pthread -I.
+GCOV_FLAGS =
+CHECK_LIBS = -lcheck -lm -lpthread -lrt -lsubunit
 
-SOURCE_FILES = s21_decimal_transform.c s21_auxfunct.c
-OBJECT_FILES = s21_decimal_transform.o s21_auxfunct.o
-SOURCE_TEST = DecTest.c
+SRC = \
+	s21_add.c \
+	s21_sub.c \
+	s21_is_equal.c \
+	s21_is_less.c \
+	s21_is_not_equal.c \
+	s21_is_greater.c \
+	s21_is_less_or_equal.c \
+	s21_is_greater_or_equal.c \
+	s21_helpers_funcs.c \
+	s21_big_decimal.c
 
-GCOV_DIR = report
+TEST_SRC = \
+	Tests/test_func.c \
+	Tests/test_main.c
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Linux)
-CHECK_LIBS = -lcheck -lm -lpthread -lsubunit
-else
-CHECK_LIBS = -lcheck -lm -lpthread
-endif
+OBJ = $(SRC:.c=.o)
+TEST_OBJ = $(TEST_SRC:.c=.o)
 
+TARGET = test_runner
 
-# цель по умолчанию 
-all: clean s21_decimal.a test gcov_report
+all: test
 
-# создание библиотеки
-s21_decimal.a : $(OBJECT_FILES)
-	ar crs s21_decimal.a $(OBJECT_FILES)
-	rm -f *.o
+test: $(TARGET)
+	./$(TARGET)
 
-$(OBJECT_FILES): %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+$(TARGET): $(OBJ) $(TEST_OBJ)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) $^ -o $@ $(CHECK_LIBS)
 
-# тест без gcov отчета
-test: clean s21_decimal.a s21_test_run
-	./s21_test_run
+%.o: %.c
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
 
-s21_test_run: $(SOURCE_TEST)
-#	$(CC) $(CFLAGS) $(CHECK_FLAGS) $(SOURCE_TEST) s21_string.a $(CHECK_LIBS) -o $@
-	$(CC) $(CFLAGS) $(SOURCE_TEST) s21_decimal.a -o $@
+Tests/%.o: Tests/%.c
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
+
+gcov_report: clean
+	$(MAKE) GCOV_FLAGS="--coverage" test
+	gcovr -r . --exclude 'Tests/*' --html --html-details -o gcov_report.html
+	xdg-open gcov_report.html 2>/dev/null || true
 
 clean:
-	rm -f *.o s21_decimal.a s21_test_run
+	rm -f $(OBJ) $(TEST_OBJ) $(TARGET)
+	rm -f *.gcno *.gcda Tests/*.gcno Tests/*.gcda
+	rm -f gcov_report.html
 
-
-.PHONY: all clean test 
+re: clean all

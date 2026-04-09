@@ -6,7 +6,8 @@ void getDecimalBit(s21_decimal numb, int bitNumber) {
     printf("Decimal byte %d bit #%d current byte  &  mask:\n", DecByt, DecBit);
     printIntBits(numb.bits[DecByt]);
     printIntBits(1 << DecBit);
-    printf("BIT [%d] = %d \n", bitNumber, (numb.bits[DecByt] & (1 << DecBit)) == (1 << DecBit));
+    printf("BIT [%d] = %d \n", bitNumber,
+           (numb.bits[DecByt] & (1 << DecBit)) == (1 << DecBit));
   } else {
     printf("type Decimal haven't bit # %d [0 - 127]\n", bitNumber);
   }
