@@ -71,7 +71,7 @@ int s21_big_add_mantissa(s21_big_decimal a, s21_big_decimal b,
 
     for (int i = 0; i < 7; i++) {
         unsigned long long first = a.bits[i];
-        unsigned long long second = a.bits[i];
+        unsigned long long second = b.bits[i];
         unsigned long long sum = first + second + over;
 
         // Записывает в текущее слово результата только младшие 32 бита суммы
@@ -133,7 +133,7 @@ int s21_big_mul10_mantissa(s21_big_decimal *value) {
 }
 
 int s21_big_div10_mantissa(s21_big_decimal *value, unsigned int *remainder) {
-    // Делит большую мантиссу на 10 и возращает остаток
+    // Делит большую мантиссу на 10 и возвращает остаток
     unsigned long long rem = 0;
 
     if (value == NULL || remainder == NULL) {
@@ -212,7 +212,7 @@ int s21_big_round_up(s21_big_decimal value, unsigned int last_removed,
 
     // Если последняя удалённая цифра меньше 5, никогда не округляем вверх
     if (last_removed < 5u) {
-        return 1;
+        return 0;
     }
 
     // Если последняя удалённая цифра равна 5, округляем вверх только если были
@@ -234,7 +234,8 @@ int s21_big_decimal_rounding(s21_big_decimal src, s21_decimal *rst) {
     // Возвращает 0, если всё прошло успешно, 1 - если результат не может быть
     // представлен в виде s21_decimal, 2 - если результат не может быть
     // представлен в виде s21_decimal, но может быть представлен в виде
-    // s21_decimal с другим знаком (например, из-за переполнения при округлении).
+    // s21_decimal с другим знаком (например, из-за переполнения при
+    // округлении).
     if (rst == NULL) {
         return src.sign ? 2 : 1;
     }
@@ -289,4 +290,67 @@ int s21_big_decimal_rounding(s21_big_decimal src, s21_decimal *rst) {
     }
 
     return 0;
+}
+
+int s21_add_sub_core(s21_decimal value_1, s21_decimal value_2,
+                     s21_decimal *result, int is_sub) {
+    // Основная функция для сложения и вычитания. Если is_sub == 0, то
+    // выполняется сложение, иначе - вычитание. Возвращает 0, если всё прошло
+    // успешно, 1 - если результат не может быть представлен в виде s21_decimal,
+    // 2 - если результат не может быть представлен в виде s21_decimal, но может
+    // быть представлен в виде s21_decimal с другим знаком (например, из-за
+    // переполнения при округлении).
+    if (result == NULL) {
+        return 1;
+    }
+
+    s21_zero_decimal(result);
+
+    s21_decimal second_dec = value_2;
+
+    if (is_sub) {
+        s21_set_sign(&second_dec, !s21_get_sign(second_dec));
+    }
+
+    s21_big_decimal a;
+    s21_big_decimal b;
+    s21_big_decimal res;
+
+    s21_big_from_decimal(value_1, &a);
+    s21_big_from_decimal(second_dec, &b);
+
+    if (s21_big_normalize_scales(&a, &b) != 0) {
+        return a.sign ? 2 : 1;
+    }
+
+    res.scale = a.scale;
+    res.sign = 0;
+
+    if (a.sign == b.sign) {
+        if (s21_big_add_mantissa(a, b, &res) != 0) {
+            return a.sign ? 2 : 1;
+        }
+        res.sign = a.sign;
+    } else {
+        int cmp = s21_big_compare_mantissa(a, b);
+
+        if (cmp == 0) {
+            return 0;
+        }
+
+        if (cmp > 0) {
+            if (s21_big_sub_mantissa(a, b, &res) != 0) {
+                return a.sign ? 2 : 1;
+            }
+            res.sign = a.sign;
+        } else {
+            if (s21_big_sub_mantissa(b, a, &res) != 0) {
+                return b.sign ? 2 : 1;
+            }
+            res.sign = b.sign;
+        }
+    }
+
+    res.scale = a.scale;
+    return s21_big_decimal_rounding(res, result);
 }
