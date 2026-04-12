@@ -52,19 +52,21 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     res = 1;
     zeroDecNumb(dst); //printf("(src != 0 && src < 1e-28)");
   }
-  else if (src > 1e+29) {
+  else if (src > 7.9228162514264337593543950335e+28) { //(|x| > 79,228,162,514,264,337,593,543,950,335)
+    printf("\n\nMAX FLAG 1\n\n");
     res = 1; //printf("(src > 1e+29)");
   }
   else {
-    CheckFloat8(src, &mantissa, &scale);   printf("\nTOTAL II mantisa = %d, scale = %d, scale < -21 && mant > 7922816 = %d\n\n", mantissa, scale, (scale < -21 && mantissa > 7922816));
+    CheckFloat8(src, &mantissa, &scale);   //printf("\nTOTAL II mantisa = %d, scale = %d, scale < -21 && mant > 7922816 = %d\n\n", mantissa, scale, (scale < -21 && mantissa > 7922816));
     if (scale < -21 && mantissa > 7922816) {                                                 
-      res = 1; printf("numb is bigger then max decimal\n");
+      printf("\n\nMAX FLAG 2\n\n");
+      res = 1;  // printf("numb is bigger then max decimal\n");
       // zeroDecNumb(dst);  
     }
     else if (mantissa != 0) {
       zeroDecNumb(dst);
       setSign(dst, sign); 
-      while (mantissa % 10 == 0) {
+      while (mantissa % 10 == 0 && scale > 0) {
         mantissa /= 10;
         scale--;
       }
@@ -79,7 +81,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
       zeroDecNumb(dst); 
       setSign(dst, sign); 
     }
-  } //  printf("\n\nFLOAT TO DEC final: \n"); printDecimalBits(*dst);
+  }
   return res;
 }
 
