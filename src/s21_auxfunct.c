@@ -59,13 +59,6 @@ void CheckFloat8(float src, int * mantissa_seven, int * scale_seven) {
       //printf ("FINAL CHEKFLOAT mantissa = %d in %d scale src float = %d\n", *mantissa_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven + 1)) );
 }
 
-int FloatSign(float src) {
-  int result;
-  result = ((signbit(src) & (1 << 31)) == (1 << 31));
-  return result;
-}
-
-
 int checkDecimal(s21_decimal numb){
   //Decimal проверка числа на scale <= 28 && запрещенные биты = 0
   // 0 - ok    1 - error

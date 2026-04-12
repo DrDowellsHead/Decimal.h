@@ -14,7 +14,6 @@ union DateDecLL {
 
 int checkDecimal(s21_decimal numb);
 void CheckFloat8(float src, int * mantissa_seven, int * scale_seven);
-int FloatSign(float src);
 double mDecimal(s21_decimal numb); 
 void printBits(const void *ptr, size_t size);
 void printCharBits(char num);

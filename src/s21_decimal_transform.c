@@ -44,7 +44,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   if (dst == NULL) printf("\n\nbad ptr\n\n");
-  else printf("\n\nptr is true\n\n");
+  else printf("\n\nptr is true!\n\n");
   int res = 0, sign, scale, mantissa;  
   sign = ((signbit(src) & (1 << 31)) == (1 << 31));
   src = (sign) ? src * (-1) : src;  
