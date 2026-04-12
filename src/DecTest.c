@@ -9,6 +9,8 @@ union DateDecLL {
  };
 */
 
+s21_decimal * ptr_dec_numb;
+
 int main() {
   s21_decimal s21Numb = {{0xFFFFFFFF, 0x000000FF, 0, 0}};
   //float flnum = 79832191.12345679;
@@ -165,6 +167,22 @@ printDecimalBits(datai.decNumb);
 
  //datai.decNumb = s21Numb;
  printf("\n\nMAIN continue \nx64 [0] = %llu \n",  datai.llNumb[0]);
+
+ x5 =  -0.0;//1e-28;
+ x5 *= -1;
+ //x5 = -255.0e-15;
+printf("FLOAT 0 = %f\n", x5);
+printFloatBits(x5);
+  printf("\nX = %60.30f\nXe= %e\n\n", x5, x5);
+  printf("\n\nMAIN Result of float to dec = %d ( 0 - ok )\n", s21_from_float_to_decimal(x5, &s21Numb));
+  printDecimalBits(s21Numb);
+
+  //s21_decimal * ptr_dec_numb;
+  //float * ptrf;
+  //printf("\n\n %p", ptrf);
+  //printf("\n\n %p", NULL);
+  //if (ptr_dec_numb) printf("\n\ntrue");
+  //else printf("\n\nfalse");
 
  //printf("    res mDecimal = %20.4lf\n", mDecimal(datai.decNumb));
  //printf("LLI res mDecimal = %20lld\n", (long long int)mDecimal(datai.decNumb));
