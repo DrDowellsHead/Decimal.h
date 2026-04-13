@@ -13,7 +13,7 @@ s21_decimal * ptr_dec_numb;
 
 int main() {
   s21_decimal s21Numb;// = {0};//{{0xFFFFFFFF, 0x000000FF, 0, 0}};
-  printDecimalBits(s21Numb);
+  //printDecimalBits(s21Numb);
   //float flnum = 79832191.12345679;
 
   //0x7FFFFFFF
@@ -81,6 +81,7 @@ int main() {
   float x = 268435459;
   x = 0.341e-28;//
   //x = 1234567890123456789012345678901234567890.123456789012345678901234567890;
+  
   union DateDecLL datai;
   
   
@@ -105,6 +106,8 @@ int main() {
 
   char buffFloat[100];
   float x5 = -1234567.8901e+38;
+
+
   //sprintf(buffFloat, "%-f", x5); 
   //printf("Float %f string x = [%s]\n", x5, buffFloat);
   //printf("true x < x2 & x > 1e-28 ? %d\n", (x5 > 1e-28 && x5 < 1e+29));
@@ -116,9 +119,10 @@ int main() {
   //x = 2147483647;
   //(|x| > 79,228,162,514,264,337,593,543,950,335)
   x = 7.92281622514264337593543950335e+28; //max dec
-  printFloatBits(x);
-  x = 7.92281672514264337593543950335e+28; //max dec
-  printFloatBits(x);
+  //printFloatBits(x);
+  //float x2 = 7.9228168e+28;
+  //printFloatBits(x2);
+  // printf(" x = x2  is - %d \n", x == x2);
   //x = -7.92282622514264337593543950335e+28; //biger
   //x = 7.92282622514264337593543950335e+28;  // biger
   //x = 7.92282622514264337593543950335e+35; // much bigger
@@ -132,17 +136,24 @@ int main() {
   //x = 1.0092295622514264337593543950335e+2;
   //x = 0.00095295622514264337593543950335e-24;
   //x = 0.00095295632514264337593543950335e+16;
-  //x = -8.3e-9;
+  x = - 8.3e-9;
   //x = 100000;
-  //x = 0;
-  //x = -1;
+  //x = -0.0f;
+  //x = 0.0f;
+  //x = -1.0f;
   //x = -18446744073709551616.0;
 
   printFloatBits(x);
-  printf("\nX = %60.30f\nXe= %e\n\n", x, x);
+  //printf("\nX = %60.30f\nXe = %e\nX2= %60.30f\nXe2= %e\n\n", x, x, x2, x2);
+  printf("\nX = %60.30f\nXe = %e\n\n", x, x);
   printf("\n\nMAIN Result of float to dec = %d ( 0 - ok )\n", s21_from_float_to_decimal(x, &s21Numb));
-  
-//s21Numb.bits[0] = 0x7FFFFFFF; //max int 2147483647
+  //printDecimalBits(s21Numb);
+
+  //printf("mantisa s21Numb = %30Lf\n", mDecimal(s21Numb));
+  //printf("mantisa s21Numb = %.20Le\n", mDecimal(s21Numb));
+
+
+  //s21Numb.bits[0] = 0x7FFFFFFF; //max int 2147483647
 //s21Numb.bits[0] = 0x80000000; //min int 2147483648 with -
 //s21Numb.bits[1] = 0xFFFFFFFF;
 //s21Numb.bits[2] = 0xFFFFFFFF;
@@ -157,6 +168,12 @@ int main() {
 //setScale(&datai.decNumb, 20);
 //setSign(&datai.decNumb, 1);
 
+
+
+
+
+
+
 datai.decNumb = s21Numb;
 printDecimalBits(datai.decNumb);
  int xifdec = 77;
@@ -166,20 +183,22 @@ printDecimalBits(datai.decNumb);
  //printIntBits(xifdec);
  printf("\nRES from dec to float = %d ( 0 - ok )\n", s21_from_decimal_to_float(datai.decNumb, &x5));
  sprintf(buffFloat, "%-.28f", x5); 
- printf("Float = %f \nFLoat = %e \nstring [%s]\n", x5, x5, buffFloat);
+ printf("Float = %30f \nFLoat = %e \nstring [%s]\n", x5, x5, buffFloat);
  printf("\n\n DELTA = %e %%\n", (x - x5) / x );
 
  //datai.decNumb = s21Numb;
  printf("\n\nMAIN continue \nx64 [0] = %llu \n",  datai.llNumb[0]);
 
- x5 =  -0.0;//1e-28;
- x5 *= -1;
+ // x5 =  -0.0;//1e-28;
+ // x5 *= -1;
  //x5 = -255.0e-15;
-printf("FLOAT 0 = %f\n", x5);
-printFloatBits(x5);
-  printf("\nX = %60.30f\nXe= %e\n\n", x5, x5);
-  printf("\n\nMAIN Result of float to dec = %d ( 0 - ok )\n", s21_from_float_to_decimal(x5, &s21Numb));
-  printDecimalBits(s21Numb);
+ // printf("FLOAT 0 = %f\n", x5);
+ // printFloatBits(x5);
+ // printf("\nX = %60.30f\nXe= %e\n\n", x5, x5);
+ // printf("\n\nMAIN Result of float to dec = %d ( 0 - ok )\n", s21_from_float_to_decimal(x5, &s21Numb));
+//  printDecimalBits(s21Numb);
+
+ 
 
   //s21_decimal * ptr_dec_numb;
   //float * ptrf;

@@ -43,43 +43,27 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  if (dst == NULL) printf("\n\nbad ptr\n\n");
-  else printf("\n\nptr is true!\n\n");
-  int res = 0, sign, scale, mantissa;  
-  sign = ((signbit(src) & (1 << 31)) == (1 << 31));
-  src = (sign) ? src * (-1) : src;  
-  if (src != 0 && src < 1e-28) {
-    res = 1;
-    zeroDecNumb(dst); //printf("(src != 0 && src < 1e-28)");
-  }
-  else if (src > 7.9228162514264337593543950335e+28) { //(|x| > 79,228,162,514,264,337,593,543,950,335)
-    printf("\n\nMAX FLAG 1\n\n");
-    res = 1; //printf("(src > 1e+29)");
-  }
-  else {
-    CheckFloat8(src, &mantissa, &scale);   //printf("\nTOTAL II mantisa = %d, scale = %d, scale < -21 && mant > 7922816 = %d\n\n", mantissa, scale, (scale < -21 && mantissa > 7922816));
-    if (scale < -21 && mantissa > 7922816) {                                                 
-      printf("\n\nMAX FLAG 2\n\n");
-      res = 1;  // printf("numb is bigger then max decimal\n");
-      // zeroDecNumb(dst);  
-    }
-    else if (mantissa != 0) {
-      zeroDecNumb(dst);
+  int res = 1, sign, scale, mantissa; 
+  if (dst != NULL) {  
+    sign = signbit(src); 
+    src = (sign) ? src * (-1) : src;
+    zeroDecNumb(dst);  
+    if (src == 0 || (src > 1e-28 && src < 7.9228168e+28)) {//zero , min & max check 
+      res = 0;
+      CheckFloat8(src, &mantissa, &scale);   
       setSign(dst, sign); 
-      while (mantissa % 10 == 0 && scale > 0) {
-        mantissa /= 10;
-        scale--;
+      if (mantissa != 0) {
+        while (mantissa % 10 == 0 && scale > 0) {
+          mantissa /= 10;
+          scale--;
+        }
+        dst->bits[0] = mantissa;
+        while (scale < 0) {
+          *dst = mant_mult10(*dst);
+          scale++;
+        } 
       }
-      dst->bits[0] = mantissa;
-      while (scale < 0) {
-        *dst = mant_mult10(*dst);
-        scale++;
-      } 
-      setScale(dst, scale); 
-    }
-    else {
-      zeroDecNumb(dst); 
-      setSign(dst, sign); 
+      setScale(dst, scale);
     }
   }
   return res;
@@ -121,12 +105,8 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
 
 // В float
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  int res = 0, sign;
-  if (checkDecimal(src)) {
-    //*dst = 0;
-    res = 1;
-  }
-  else {
+  int res = 1, sign;
+  if (dst != NULL) {
     sign = (getSign(src)) ? - 1 : 1;
     *dst = (float)(sign * ((mDecimal(src)) * pow(10.0, - getScale(src))));
   } 

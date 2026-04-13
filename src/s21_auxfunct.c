@@ -1,7 +1,7 @@
 #include "s21_auxfunct.h"
 
-double mDecimal(s21_decimal numb) {
-  double res = 0;
+long double mDecimal(s21_decimal numb) {
+  long double res = 0;
   for (int i = 0; i < 96; i++) {
     res += getDecimalBit( numb, i) * pow(2.0, i);  //printf("i=%d, NUMB = %lf\n", i, modul_numb);
   }
@@ -248,7 +248,7 @@ void printIntBits(int numb) {
 
 void printFloatBits(float numb) {
     int * bits = (int *)&numb;
-    printf("Float number : %20.7f \nBits :   ", numb);
+    printf("Float number : %-.8e \nBits :   ", numb);
     for (int i = 31; i >= 0; i--) {
       if (i < 23) {
         printf("\033[32m%d\033[0m", (*bits >> i) & 1);
