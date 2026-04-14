@@ -1,5 +1,3 @@
-#include "s21_decimal.h"
-
 #include <check.h>
 #include <math.h>
 #include <stdio.h>
@@ -7,7 +5,7 @@
 #include <string.h>
 
 #include "s21_auxfunct.h"
-
+#include "s21_decimal.h"
 
 // int s21_from_int_to_decimal(int src, s21_decimal *dst)
 START_TEST(test_s21_from_int_to_decimal_zero) {
@@ -33,7 +31,7 @@ START_TEST(test_s21_from_int_to_decimal_max_int) {
 END_TEST
 
 START_TEST(test_s21_from_int_to_decimal_min_int) {
-  int x = - 2147483648, res;
+  int x = -2147483648, res;
   s21_decimal x_dec_res, x_dec_purp;
   x_dec_purp.bits[3] = 0x80000000;
   x_dec_purp.bits[2] = 0;
@@ -59,7 +57,7 @@ START_TEST(test_s21_from_int_to_decimal_pos_int) {
 END_TEST
 
 START_TEST(test_s21_from_int_to_decimal_neg_int) {
-  int x = - 8, res;
+  int x = -8, res;
   s21_decimal x_dec_res, x_dec_purp;
   x_dec_purp.bits[3] = 0x80000000;
   x_dec_purp.bits[2] = 0;
@@ -73,14 +71,14 @@ END_TEST
 
 START_TEST(test_s21_from_int_to_decimal_bad_sorce) {
   int x = 0, res;
-  s21_decimal * ptr_x_dec_res = NULL;
+  s21_decimal *ptr_x_dec_res = NULL;
   res = s21_from_int_to_decimal(x, ptr_x_dec_res);
   ck_assert_int_eq(res, 1);
 }
 END_TEST
 
-
-// int s21_from_float_to_decimal(float src, s21_decimal *dst)_______________________________________________
+// int s21_from_float_to_decimal(float src, s21_decimal
+// *dst)_______________________________________________
 START_TEST(test_s21_from_float_to_decimal_zero) {
   int res;
   float x = 0.0f;
@@ -93,7 +91,7 @@ END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_neg_zero) {
   int res;
-  float x = - 0.0f;
+  float x = -0.0f;
   s21_decimal x_dec_res, x_dec_purp;
   x_dec_purp.bits[3] = 0x80000000;
   x_dec_purp.bits[2] = 0;
@@ -121,7 +119,7 @@ END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_max_neg_for_dec) {
   int res;
-  float x = - 7.92281622514264337593543950335e+28f;
+  float x = -7.92281622514264337593543950335e+28f;
   s21_decimal x_dec_res, x_dec_purp;
   x_dec_purp.bits[3] = 0x80000000;
   x_dec_purp.bits[2] = 0xFFFFFF77;
@@ -176,7 +174,7 @@ START_TEST(test_s21_from_float_to_decimal_neg_small_for_dec) {
 END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_pos_big_dec) {
-  int res; 
+  int res;
   float x = 231.0e+18f;
   s21_decimal x_dec_res, x_dec_purp;
   x_dec_purp.bits[3] = 0x00000000;
@@ -205,7 +203,8 @@ END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_bigger_than_max_for_dec) {
   int res;
-  float x = 7.922817e+28;;
+  float x = 7.922817e+28;
+  ;
   s21_decimal x_dec_res = {0}, x_dec_purp = {0};
   res = s21_from_float_to_decimal(x, &x_dec_res);
   ck_assert_mem_eq(&x_dec_res, &x_dec_purp, sizeof(s21_decimal));
@@ -215,7 +214,8 @@ END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_neg_bigger_than_max_for_dec) {
   int res;
-  float x = - 7.922817e+28;;
+  float x = -7.922817e+28;
+  ;
   s21_decimal x_dec_res = {0}, x_dec_purp = {0};
   res = s21_from_float_to_decimal(x, &x_dec_res);
   ck_assert_mem_eq(&x_dec_res, &x_dec_purp, sizeof(s21_decimal));
@@ -235,7 +235,7 @@ END_TEST
 
 START_TEST(test_s21_from_float_to_decimal_neg_smaller_than_max_for_dec) {
   int res;
-  float x = - 7.9e-29;
+  float x = -7.9e-29;
   s21_decimal x_dec_res = {0}, x_dec_purp = {0};
   res = s21_from_float_to_decimal(x, &x_dec_res);
   ck_assert_mem_eq(&x_dec_res, &x_dec_purp, sizeof(s21_decimal));
@@ -246,7 +246,7 @@ END_TEST
 START_TEST(test_s21_from_float_to_decimal_bad_sorce) {
   int res;
   float x = 8.9;
-  s21_decimal * ptr_x_dec_res = NULL;
+  s21_decimal *ptr_x_dec_res = NULL;
   res = s21_from_float_to_decimal(x, ptr_x_dec_res);
   ck_assert_int_eq(res, 1);
 }
@@ -280,8 +280,8 @@ START_TEST(test_s21_from_float_to_decimal_for_bank2) {
 }
 END_TEST
 
-
-// int s21_from_decimal_to_int(s21_decimal src, int *dst)_____________________________________________________________________________
+// int s21_from_decimal_to_int(s21_decimal src, int
+// *dst)_____________________________________________________________________________
 START_TEST(test_s21_from_decimal_to_int_zero) {
   int res, x_res, x_purp;
   x_purp = 0;
@@ -354,7 +354,7 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_int_neg) {
   int res, x_res, x_purp;
-  x_purp = - 2145448191;
+  x_purp = -2145448191;
   s21_decimal x_dec;
   x_dec.bits[3] = 0x80000000;
   x_dec.bits[2] = 0x00000000;
@@ -368,7 +368,7 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_int_not_integer) {
   int res, x_res, x_purp;
-  x_purp = - 21454;
+  x_purp = -21454;
   s21_decimal x_dec;
   x_dec.bits[3] = 0x80050000;
   x_dec.bits[2] = 0x00000000;
@@ -424,15 +424,15 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_int_bad_ptr_dec) {
   int res;
-  int * ptr_x_res = NULL;
+  int *ptr_x_res = NULL;
   s21_decimal x_dec;
   res = s21_from_decimal_to_int(x_dec, ptr_x_res);
   ck_assert_int_eq(res, 1);
 }
 END_TEST
 
-
-// int s21_from_decimal_to_float(s21_decimal src, float *dst)__________________________________________________________________________________
+// int s21_from_decimal_to_float(s21_decimal src, float
+// *dst)__________________________________________________________________________________
 START_TEST(test_s21_from_decimal_to_float_zero) {
   int res;
   float x_res, x_purp = 0.0f;
@@ -449,7 +449,7 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_float_neg_zero) {
   int res;
-  float x_res, x_purp = - 0.0f;
+  float x_res, x_purp = -0.0f;
   s21_decimal x_dec;
   x_dec.bits[3] = 0x80000000;
   x_dec.bits[2] = 0x00000000;
@@ -505,7 +505,7 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_float_neg_min_dec) {
   int res;
-  float x_res, x_purp = - 1.0e-28f;
+  float x_res, x_purp = -1.0e-28f;
   s21_decimal x_dec;
   x_dec.bits[3] = 0x801C0000;
   x_dec.bits[2] = 0x00000000;
@@ -573,7 +573,7 @@ END_TEST
 
 START_TEST(test_s21_from_decimal_to_float_bad_ptr_float) {
   int res;
-  float * ptr_x_res = NULL;
+  float *ptr_x_res = NULL;
   s21_decimal x_dec = {0};
   res = s21_from_decimal_to_float(x_dec, ptr_x_res);
   ck_assert_int_eq(res, 1);
@@ -604,9 +604,11 @@ Suite *s21_decimal_suite() {
   tcase_add_test(tc, test_s21_from_float_to_decimal_pos_big_dec);
   tcase_add_test(tc, test_s21_from_float_to_decimal_neg_big_dec);
   tcase_add_test(tc, test_s21_from_float_to_decimal_bigger_than_max_for_dec);
-  tcase_add_test(tc, test_s21_from_float_to_decimal_neg_bigger_than_max_for_dec);
+  tcase_add_test(tc,
+                 test_s21_from_float_to_decimal_neg_bigger_than_max_for_dec);
   tcase_add_test(tc, test_s21_from_float_to_decimal_smaller_than_max_for_dec);
-  tcase_add_test(tc, test_s21_from_float_to_decimal_neg_smaller_than_max_for_dec);
+  tcase_add_test(tc,
+                 test_s21_from_float_to_decimal_neg_smaller_than_max_for_dec);
   tcase_add_test(tc, test_s21_from_float_to_decimal_bad_sorce);
   tcase_add_test(tc, test_s21_from_float_to_decimal_for_bank);
   tcase_add_test(tc, test_s21_from_float_to_decimal_for_bank2);
