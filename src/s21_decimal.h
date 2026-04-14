@@ -7,6 +7,30 @@ typedef struct
 {
     int bits[4];
 } s21_decimal;
+	
+int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);	
+int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);	
+int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);	
+int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+	
+int s21_is_less(s21_decimal, s21_decimal);
+int s21_is_less_or_equal(s21_decimal, s21_decimal);	
+int s21_is_greater(s21_decimal, s21_decimal);
+int s21_is_greater_or_equal(s21_decimal, s21_decimal);
+int s21_is_equal(s21_decimal, s21_decimal);
+int s21_is_not_equal(s21_decimal, s21_decimal);
+	
+int s21_from_int_to_decimal(int src, s21_decimal *dst);	
+int s21_from_float_to_decimal(float src, s21_decimal *dst);	
+int s21_from_decimal_to_int(s21_decimal src, int *dst);	
+int s21_from_decimal_to_float(s21_decimal src, float *dst);
+	
+int s21_floor(s21_decimal value, s21_decimal *result);
+int s21_round(s21_decimal value, s21_decimal *result);	
+int s21_truncate(s21_decimal value, s21_decimal *result);
+int s21_negate(s21_decimal value, s21_decimal *result);
+
+#endif
 
 /*
 При реализации decimal ориентируйся на двоичное представление с целочисленным массивом bits, как указано в примере выше. 
@@ -57,9 +81,8 @@ bits[3] содержит коэффициент масштабирования �
 Бит 31 содержит знак; 0 означает положительный, а 1 означает отрицательный.
 Обрати внимание, что битовое представление различает отрицательные и положительные нули. 
 Эти значения могут считаться эквивалентными во всех операциях.
-*/
 
-/*
+
 Арифметические операторы
 Функции возвращают код ошибки:
 0 — OK;
@@ -70,35 +93,12 @@ bits[3] содержит коэффициент масштабирования �
 При получении чисел, не вмещающихся в мантиссу при арифметических операциях, 
 используй банковское округление 
 (например, 79,228,162,514,264,337,593,543,950,335 — 0.6 = 79,228,162,514,264,337,593,543,950,334).
-*/
-//Сложение	+	
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-//Вычитание	-	
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-//Умножение	*	
-int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-//Деление	/	
-int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-
 
 //Операторы сравнения
 //Возвращаемое значение:
 //0 — FALSE;
 //1 — TRUE.
-//Меньше	<	
-int s21_is_less(s21_decimal, s21_decimal);
-//Меньше или равно	<=	
-int s21_is_less_or_equal(s21_decimal, s21_decimal);
-//Больше	>	
-int s21_is_greater(s21_decimal, s21_decimal);
-//Больше или равно	>=	
-int s21_is_greater_or_equal(s21_decimal, s21_decimal);
-//Равно	==	
-int s21_is_equal(s21_decimal, s21_decimal);
-//Не равно	!=	
-int s21_is_not_equal(s21_decimal, s21_decimal);
 
-/*
 Преобразователи
 Возвращаемое значение — код ошибки:
 0 — OK;
@@ -118,28 +118,8 @@ int s21_is_not_equal(s21_decimal, s21_decimal);
 Уточнение про преобразование из числа типа decimal в тип int:
 Если в числе типа decimal есть дробная часть, то её следует отбросить (например, 0.9 преобразуется 0).
 
-*/
-//Из int	
-int s21_from_int_to_decimal(int src, s21_decimal *dst);
-//Из float	
-int s21_from_float_to_decimal(float src, s21_decimal *dst);
-//В int	
-int s21_from_decimal_to_int(s21_decimal src, int *dst);
-//В float	
-int s21_from_decimal_to_float(s21_decimal src, float *dst);
-
-
 //Другие функции
 //Возвращаемое значение — код ошибки:
 //0 — OK;
 //1 — ошибка вычисления.
-//Округляет указанное Decimal число до ближайшего целого числа в сторону отрицательной бесконечности.	
-int s21_floor(s21_decimal value, s21_decimal *result);
-//Округляет Decimal до ближайшего целого числа.	
-int s21_round(s21_decimal value, s21_decimal *result);
-//Возвращает целые цифры указанного Decimal числа; любые дробные цифры отбрасываются, включая конечные нули.	
-int s21_truncate(s21_decimal value, s21_decimal *result);
-//Возвращает результат умножения указанного Decimal на -1.	
-int s21_negate(s21_decimal value, s21_decimal *result);
-
-#endif
+*/
