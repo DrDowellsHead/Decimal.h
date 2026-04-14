@@ -25,31 +25,32 @@
 
 // Из int
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-  int res = 0;
-  unsigned int srcD;
-  zeroDecNumb(dst);
-  res = setScale(dst, 0);
-  if (src < 0) {
-    setSign(dst, 1);
-    srcD = 1 + (unsigned int)(-1 * (src + 1));
+  int res = 1;
+  if (dst != NULL) { 
+    res = 0;
+    zeroDecNumb(dst);
+    setSign(dst, (src < 0) ? 1 : 0);
+    if (src == -2147483648) {
+      dst->bits[0] = src;               //1 + (unsigned int)(-1 * (src + 1));
+    }
+    else {
+      dst->bits[0] = src * ((src < 0) ? -1 : 1);
+    }
   }
-  else {
-    srcD = (unsigned int)src;
-  }
-  dst->bits[0] = srcD;
   return res;
 }
 
 
 // Из float
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  int res = 1, sign, scale, mantissa; 
+  int res = 1; 
   if (dst != NULL) {  
-    sign = signbit(src); 
+    int sign, scale, mantissa;
+    sign = (signbit(src) == 0) ? 0 : 1; 
     src = (sign) ? src * (-1) : src;
-    zeroDecNumb(dst);  
-    if (src == 0 || (src > 1e-28 && src < 7.9228168e+28)) {//zero , min & max check 
+    if (src == 0 || (src > 1e-28 && src < 7.9228168e+28)) {// zero, min & max check 
       res = 0;
+      zeroDecNumb(dst); 
       CheckFloat8(src, &mantissa, &scale);   
       setSign(dst, sign); 
       if (mantissa != 0) {
@@ -57,11 +58,14 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
           mantissa /= 10;
           scale--;
         }
-        dst->bits[0] = mantissa;
+        dst->bits[0] = mantissa; 
         while (scale < 0) {
           *dst = mant_mult10(*dst);
           scale++;
         } 
+      }
+      else {
+        scale = 0;
       }
       setScale(dst, scale);
     }
@@ -73,32 +77,25 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
 // В int
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   // max int 2147483647 && min int -2147483648
-  //printf("From Dec to INT CheckDec = %d\n", checkDecimal(src));
-  int res = 0, sign, scale, bad_dec;
-  bad_dec = checkDecimal(src);
-  if (!bad_dec) {
-    double norm_mant;
+  int res = 1, sign, scale;
+  if (dst != NULL && !CheckDecimal(src)) {
+    long double norm_mant;
     sign = (getSign(src)) ? - 1 : 1;
-    scale = getScale(src);                                     //printf("%30lf\n", mDecimal(src));
+    scale = getScale(src);                                     
     while (scale > 0) {
       src = mant_div10(src);
       scale--;
-    }                                                          //  printDecimalBits(src);
-    norm_mant = mDecimal(src);                                 //  printf("%30lf\n", mDecimal(src)); //printf("%-20lf\n%-20lu\n", norm_mant, 2147483648);
-    if (sign > 0 && norm_mant < (double)2147483648) {
+    }   
+    norm_mant = mDecimal(src);                                
+    if (sign > 0 && norm_mant < (long double)2147483648) {
+      res = 0;
       *dst = (int)norm_mant;
     }
-    else if (sign < 0 && norm_mant < (double)2147483649) {
+    else if (sign < 0 && norm_mant < (long double)2147483649) {
+      res = 0;
       *dst = (int)(sign * norm_mant);
     }
-    else {
-      res = 1;
-    }
   }
-  else {
-    res = 1;
-  }     
-  //*dst = res ? 0 : *dst; 
   return res;
 }
 
@@ -106,7 +103,8 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
 // В float
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   int res = 1, sign;
-  if (dst != NULL) {
+  if (dst != NULL && !CheckDecimal(src)) {
+    res = 0;
     sign = (getSign(src)) ? - 1 : 1;
     *dst = (float)(sign * ((mDecimal(src)) * pow(10.0, - getScale(src))));
   } 

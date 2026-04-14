@@ -59,7 +59,7 @@ void CheckFloat8(float src, int * mantissa_seven, int * scale_seven) {
       //printf ("FINAL CHEKFLOAT mantissa = %d in %d scale src float = %d\n", *mantissa_seven, *scale_seven, (int)((double)src*pow(10, *scale_seven + 1)) );
 }
 
-int checkDecimal(s21_decimal numb){
+int CheckDecimal(s21_decimal numb){
   //Decimal проверка числа на scale <= 28 && запрещенные биты = 0
   // 0 - ok    1 - error
   int res = 0, scale;
@@ -98,7 +98,6 @@ s21_decimal mant_div10(s21_decimal numb) {
     return res;
 }
 
-// num[3] — 96-битное число (uint32_t), result[3] — частное
 s21_decimal mant_mult10(s21_decimal numb) {
     s21_decimal res = numb, m8 = {0}, m2 = {0};
     zeroDecMant(&res);
