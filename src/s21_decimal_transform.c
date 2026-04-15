@@ -23,7 +23,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     sign = (signbit(src) == 0) ? 0 : 1;
     src = (sign) ? src * (-1) : src;
     if (src == 0 ||
-        (src > 1e-28 && src < 7.9228168e+28)) {  // zero, min & max check
+        (src >= 1e-28 && src < 7.9228168e+28)) {  // zero, min & max check
       res = 0;
       ZeroDecimal(dst);
       CheckFloatTR(src, &mantissa, &scale);
@@ -42,6 +42,9 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
         scale = 0;
       }
       setScale(dst, scale);
+    }
+    else if (src < 1e-28) {
+      ZeroDecimal(dst);
     }
   }
   return res;

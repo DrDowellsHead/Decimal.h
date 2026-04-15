@@ -223,20 +223,20 @@ START_TEST(test_s21_from_float_to_decimal_neg_bigger_than_max_for_dec) {
 }
 END_TEST
 
-START_TEST(test_s21_from_float_to_decimal_smaller_than_max_for_dec) {
+START_TEST(test_s21_from_float_to_decimal_smaller_than_min_for_dec) {
   int res;
   float x = 7.9e-29;
-  s21_decimal x_dec_res = {0}, x_dec_purp = {0};
+  s21_decimal x_dec_res, x_dec_purp = {0};
   res = s21_from_float_to_decimal(x, &x_dec_res);
   ck_assert_mem_eq(&x_dec_res, &x_dec_purp, sizeof(s21_decimal));
   ck_assert_int_eq(res, 1);
 }
 END_TEST
 
-START_TEST(test_s21_from_float_to_decimal_neg_smaller_than_max_for_dec) {
+START_TEST(test_s21_from_float_to_decimal_neg_smaller_than_min_for_dec) {
   int res;
   float x = -7.9e-29;
-  s21_decimal x_dec_res = {0}, x_dec_purp = {0};
+  s21_decimal x_dec_res, x_dec_purp = {0};
   res = s21_from_float_to_decimal(x, &x_dec_res);
   ck_assert_mem_eq(&x_dec_res, &x_dec_purp, sizeof(s21_decimal));
   ck_assert_int_eq(res, 1);
@@ -280,8 +280,7 @@ START_TEST(test_s21_from_float_to_decimal_for_bank2) {
 }
 END_TEST
 
-// int s21_from_decimal_to_int(s21_decimal src, int
-// *dst)_____________________________________________________________________________
+// int s21_from_decimal_to_int(s21_decimal src, int *dst)______________________________
 START_TEST(test_s21_from_decimal_to_int_zero) {
   int res, x_res, x_purp;
   x_purp = 0;
@@ -431,8 +430,7 @@ START_TEST(test_s21_from_decimal_to_int_bad_ptr_dec) {
 }
 END_TEST
 
-// int s21_from_decimal_to_float(s21_decimal src, float
-// *dst)__________________________________________________________________________________
+// int s21_from_decimal_to_float(s21_decimal src, float *dst)___________________________
 START_TEST(test_s21_from_decimal_to_float_zero) {
   int res;
   float x_res, x_purp = 0.0f;
@@ -606,9 +604,9 @@ Suite *s21_decimal_suite() {
   tcase_add_test(tc, test_s21_from_float_to_decimal_bigger_than_max_for_dec);
   tcase_add_test(tc,
                  test_s21_from_float_to_decimal_neg_bigger_than_max_for_dec);
-  tcase_add_test(tc, test_s21_from_float_to_decimal_smaller_than_max_for_dec);
+  tcase_add_test(tc, test_s21_from_float_to_decimal_smaller_than_min_for_dec);
   tcase_add_test(tc,
-                 test_s21_from_float_to_decimal_neg_smaller_than_max_for_dec);
+                 test_s21_from_float_to_decimal_neg_smaller_than_min_for_dec);
   tcase_add_test(tc, test_s21_from_float_to_decimal_bad_sorce);
   tcase_add_test(tc, test_s21_from_float_to_decimal_for_bank);
   tcase_add_test(tc, test_s21_from_float_to_decimal_for_bank2);
