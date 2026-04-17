@@ -36,7 +36,7 @@ test: s21_decimal.a
 
 clean:
 	rm -rf $(GCOV_DIR)
-	rm -f *.o s21_decimal.a s21_test_run s21_test_run_cov
+	rm -f *.o *.gcda *.gcno s21_decimal.a s21_test_run s21_test_run_cov
 
 # создание отчёта gcov 
 gcov_report: clean
